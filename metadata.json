@@ -1,0 +1,5 @@
+{
+  "name": "FakeZap - AI Chat Simulator",
+  "description": "A WhatsApp-style chat interface powered by Gemini to simulate realistic conversations.",
+  "requestFramePermissions": []
+}
