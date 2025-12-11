@@ -12,7 +12,7 @@ export const WHATSAPP_NUMBER = '5511913670303';
 // Coloque o ID numérico do seu Pixel aqui (Ex: '123456789012345')
 // O Token (EAAWY...) é para API de Servidor, para HTML usamos o ID.
 // ==============================================================================
-export const META_PIXEL_ID = 'SEU_ID_DO_PIXEL_AQUI'; 
+export const META_PIXEL_ID = '1357041429488419'; 
 
 export const THEODORO_CONTACT: Contact = {
   id: 'theodoro',
