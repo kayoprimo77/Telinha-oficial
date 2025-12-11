@@ -3,10 +3,16 @@ import { Contact } from './types';
 export const WASELLER_TOKEN = '1765468872672-d03eb3424f7e2c53c44e1f25d5d9b0f4';
 
 // ==============================================================================
-// ⚠️ CONFIGURAÇÃO REALIZADA ⚠️
-// Número atualizado conforme solicitado.
+// ⚠️ CONFIGURAÇÃO DO WHATSAPP ⚠️
 // ==============================================================================
 export const WHATSAPP_NUMBER = '5511913670303'; 
+
+// ==============================================================================
+// ⚠️ CONFIGURAÇÃO DO META PIXEL (FACEBOOK) ⚠️
+// Coloque o ID numérico do seu Pixel aqui (Ex: '123456789012345')
+// O Token (EAAWY...) é para API de Servidor, para HTML usamos o ID.
+// ==============================================================================
+export const META_PIXEL_ID = 'SEU_ID_DO_PIXEL_AQUI'; 
 
 export const THEODORO_CONTACT: Contact = {
   id: 'theodoro',
@@ -22,8 +28,7 @@ export const FUNNEL_SCRIPT = [
   {
     id: 1,
     key: 'nome',
-    getMessage: () => "Áudio", // Fallback text
-    audioUrl: 'https://s31.aconvert.com/convert/p3r68-cdx67/l9v51-d85lk.mp3',
+    getMessage: () => "Olá, tudo bem? 👋\n\nAqui é o Theodoro, gestor de investimentos imobiliários da Statux Realty! 🏢✨\n\nPra gente começar, me conta: qual é o seu nome?\nAssim já salvo seu contato aqui pra gente conversar melhor! 📲👇",
     inputType: 'text' as const
   },
   {
