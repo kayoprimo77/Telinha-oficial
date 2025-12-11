@@ -3,6 +3,7 @@ import ChatWindow from './components/ChatWindow';
 import { Message, InputMode } from './types';
 import { THEODORO_CONTACT, FUNNEL_SCRIPT, WHATSAPP_NUMBER } from './constants';
 import { sendLeadToWaseller } from './services/wasellerService';
+import { initMetaPixel, trackPageView, trackQualifiedLead, trackCustomEvent } from './services/pixelService';
 
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -17,8 +18,13 @@ const App: React.FC = () => {
     return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
   };
 
-  // Initialize Chat
+  // Initialize Chat & Pixel
   useEffect(() => {
+    // Inicia o Pixel
+    initMetaPixel();
+    trackPageView();
+    
+    // Inicia o Funil
     startFunnel();
   }, []);
 
@@ -53,6 +59,12 @@ const App: React.FC = () => {
     const currentStep = FUNNEL_SCRIPT[stepIndex];
     const updatedAnswers = { ...answers, [currentStep.key]: response };
     setAnswers(updatedAnswers);
+
+    // Track button click interaction (Custom Event for funnel progression)
+    trackCustomEvent('FunnelInteraction', {
+      step: currentStep.key,
+      response: response
+    });
 
     // 2. Add user message to chat
     const userMsg: Message = {
@@ -113,7 +125,17 @@ const App: React.FC = () => {
         // 1. Send data to CRM (Waseller) in background
         sendLeadToWaseller(updatedAnswers as any);
 
-        // 2. Generate Dynamic WhatsApp Link with Data
+        // 2. DISPARAR PIXEL DE LEAD QUALIFICADO (SOMENTE AQUI NO FINAL)
+        // Isso garante que apenas quem viu o botão final é marcado
+        trackQualifiedLead({
+          name: updatedAnswers['nome'],
+          custom_data: {
+            objetivo: updatedAnswers['objetivo'],
+            budget: updatedAnswers['budget']
+          }
+        });
+
+        // 3. Generate Dynamic WhatsApp Link with Data
         
         const textMessage = `Olá, vim pelo Chat do Site! Gostaria de agendar uma reunião.\n\n*Meus Dados:*\n👤 Nome: ${updatedAnswers['nome']}\n🏠 Objetivo: ${updatedAnswers['objetivo']}\n📈 Investidor: ${updatedAnswers['experiencia']}\n🏢 Tipo: ${updatedAnswers['tipo_imovel']}\n💰 Budget: ${updatedAnswers['budget']}`;
         
@@ -143,8 +165,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative h-screen w-full flex overflow-hidden bg-[#d1d7db] xl:px-8 xl:py-5">
-      <div className="w-full h-full flex bg-white shadow-lg overflow-hidden xl:rounded-lg xl:max-w-[1200px] xl:mx-auto">
+    // Usa 100dvh para lidar melhor com barras de navegador mobile
+    <div className="relative h-[100dvh] w-full flex flex-col overflow-hidden bg-white xl:bg-[#d1d7db] xl:px-8 xl:py-5">
+      {/* Container Principal: Em mobile ocupa 100%, em desktop tem sombra e tamanho fixo */}
+      <div className="w-full h-full flex bg-white shadow-none xl:shadow-lg overflow-hidden xl:rounded-lg xl:max-w-[1200px] xl:mx-auto">
         <div className="flex-1 bg-[#222e35] relative w-full h-full">
             <ChatWindow 
               contact={THEODORO_CONTACT}
@@ -155,6 +179,7 @@ const App: React.FC = () => {
             />
         </div>
       </div>
+      {/* Faixa verde de fundo apenas no desktop */}
       <div className="absolute top-0 left-0 w-full h-[127px] bg-[#00a884] -z-10 hidden xl:block"></div>
     </div>
   );
