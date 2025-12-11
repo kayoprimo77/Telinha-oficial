@@ -20,7 +20,6 @@ const AudioPlayer: React.FC<{ url: string; isMe: boolean }> = ({ url, isMe }) =>
     const updateProgress = () => {
       const current = audio.currentTime;
       const total = audio.duration;
-      // Handle infinite duration (common in streams or some file formats like opus before full load)
       if (isFinite(total) && total > 0) {
         setProgress((current / total) * 100);
       }
@@ -90,8 +89,7 @@ const AudioPlayer: React.FC<{ url: string; isMe: boolean }> = ({ url, isMe }) =>
   };
 
   return (
-    <div className="flex items-center gap-3 min-w-[200px]">
-      {/* Changed preload to auto to help with length detection of opus files */}
+    <div className="flex items-center gap-3 min-w-[220px]">
       <audio 
         ref={audioRef} 
         src={url} 
@@ -103,31 +101,31 @@ const AudioPlayer: React.FC<{ url: string; isMe: boolean }> = ({ url, isMe }) =>
          <button 
            onClick={togglePlay}
            disabled={error}
-           className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${isMe ? 'bg-[#a9dbb9]' : 'bg-[#e9e9eb]'} text-[#54656f] ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
+           className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${isMe ? 'bg-[#a9dbb9]' : 'bg-[#e9e9eb]'} text-[#54656f] ${error ? 'opacity-50 cursor-not-allowed' : ''}`}
          >
            {error ? (
-             <AlertCircle size={20} className="text-red-500" />
+             <AlertCircle size={24} className="text-red-500" />
            ) : isPlaying ? (
-             <Pause size={20} fill="currentColor" /> 
+             <Pause size={24} fill="currentColor" /> 
            ) : (
-             <Play size={20} fill="currentColor" className="ml-0.5" />
+             <Play size={24} fill="currentColor" className="ml-0.5" />
            )}
          </button>
          {!error && (
-            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5 shadow-sm border border-gray-100">
-                <Mic size={12} className={isMe ? 'text-[#00a884]' : 'text-[#54656f]'} />
+            <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm border border-gray-100">
+                <Mic size={14} className={isMe ? 'text-[#00a884]' : 'text-[#54656f]'} />
             </div>
          )}
       </div>
 
-      <div className="flex flex-col flex-1 gap-1">
-        <div className="w-full h-1 bg-gray-300 rounded-full overflow-hidden mt-2">
+      <div className="flex flex-col flex-1 gap-1.5">
+        <div className="w-full h-1.5 bg-gray-300 rounded-full overflow-hidden mt-2">
            <div 
              className={`h-full ${isMe ? 'bg-[#00a884]' : 'bg-[#54656f]'} transition-all duration-100`} 
              style={{ width: `${progress}%` }}
            />
         </div>
-        <span className="text-[11px] text-[#667781] mt-0.5">
+        <span className="text-[13px] text-[#667781] mt-0.5">
            {formatTime(isPlaying ? audioRef.current?.currentTime || 0 : duration)}
         </span>
       </div>
@@ -140,19 +138,19 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const isAudio = message.type === 'audio' && message.audioUrl;
 
   return (
-    <div className={`flex w-full mb-1 ${isMe ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex w-full mb-1.5 ${isMe ? 'justify-end' : 'justify-start'}`}>
       <div 
         className={`
-          rounded-lg px-2 py-1.5 relative shadow-sm text-[14.2px] leading-[19px] break-words
+          rounded-lg px-2.5 py-2 relative shadow-sm text-[16px] leading-[22px] break-words
           ${isMe ? 'bg-[#d9fdd3] rounded-tr-none' : 'bg-white rounded-tl-none'}
-          ${isAudio ? 'min-w-[280px] pr-4' : 'max-w-[85%] md:max-w-[65%]'}
+          ${isAudio ? 'min-w-[280px] sm:min-w-[320px] pr-4' : 'max-w-[85%] md:max-w-[70%]'}
         `}
       >
         {/* Triangle for bubble tail */}
-        <div className={`absolute top-0 w-0 h-0 border-[6px] border-transparent ${
+        <div className={`absolute top-0 w-0 h-0 border-[8px] border-transparent ${
           isMe 
-            ? 'right-[-6px] border-t-[#d9fdd3] border-l-[#d9fdd3]' 
-            : 'left-[-6px] border-t-white border-r-white'
+            ? 'right-[-8px] border-t-[#d9fdd3] border-l-[#d9fdd3]' 
+            : 'left-[-8px] border-t-white border-r-white'
         }`} />
 
         {isAudio ? (
@@ -163,13 +161,13 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           </span>
         )}
         
-        <div className={`flex justify-end items-end gap-1 ${isAudio ? 'mt-[-10px]' : 'mt-[-2px]'} ml-2 float-right h-4`}>
-          <span className="text-[11px] text-[#667781] min-w-fit pt-1">
+        <div className={`flex justify-end items-end gap-1 ${isAudio ? 'mt-[-10px]' : 'mt-[-3px]'} ml-2 float-right h-5`}>
+          <span className="text-[11px] text-[#667781] min-w-fit pt-1.5">
             {message.timestamp}
           </span>
           {isMe && (
             <span className={message.status === 'read' ? 'text-[#53bdeb]' : 'text-[#667781]'}>
-              {message.status === 'read' ? <CheckCheck size={15} /> : <Check size={15} />}
+              {message.status === 'read' ? <CheckCheck size={16} /> : <Check size={16} />}
             </span>
           )}
         </div>
